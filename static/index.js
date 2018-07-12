@@ -3,6 +3,7 @@ readData("GET", "static/data.json").then(
     const data = JSON.parse(e.target.response);
 
     checkLocalStorage(data, buildListOfbooks);
+    counter();
     moveItemToRight();
     moveItemToLeft();
     filter();
@@ -32,9 +33,12 @@ function filter() {
 
     document.querySelectorAll(".item .title").forEach(function(bookItem) {
       const item = bookItem.lastChild.innerText;
+
       if (item.toLowerCase().indexOf(text) != -1) {
+        counter();
         bookItem.parentElement.style.display = "flex";
       } else {
+        counter();
         bookItem.parentElement.style.display = "none";
       }
     });
@@ -42,17 +46,14 @@ function filter() {
 }
 
 function counter() {
-  let leftBlock;
-  let rightBlock;
-
-  leftBlock = JSON.parse(localStorage.getItem("leftBlock"));
-  rightBlock = JSON.parse(localStorage.getItem("rightBlock"));
-
   let leftCounter = document.querySelector(".leftCounter");
   let rightCounter = document.querySelector(".rightCounter");
 
-  leftCounter.innerText = `${leftBlock.length}`;
-  rightCounter.innerText = `${rightBlock.length}`;
+  let leftBlock = document.querySelector(".left");
+  let rightBlock = document.querySelector(".right");
+
+  leftCounter.innerText = `${leftBlock.childNodes.length}`;
+  rightCounter.innerText = `${rightBlock.childNodes.length}`;
 }
 
 function checkLocalStorage(data, callback) {
