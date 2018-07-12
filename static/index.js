@@ -23,23 +23,6 @@ function readData(method, url) {
   });
 }
 
-function counter() {
-  let leftBlock;
-  let rightBlock;
-
-  leftBlock = JSON.parse(localStorage.getItem("leftBlock"));
-  rightBlock = JSON.parse(localStorage.getItem("rightBlock"));
-
-  let leftCounter = document.querySelector(".leftCounter");
-  let rightCounter = document.querySelector(".rightCounter");
-
-  leftCounter.innerText = `${leftBlock.length}`;
-  rightCounter.innerText = `${rightBlock.length}`;
-
-  console.log(leftBlock.length);
-  console.log(rightBlock.length);
-}
-
 function filter() {
   const filter = document.querySelector("input");
   filter.addEventListener("keyup", filterBooks);
@@ -56,6 +39,20 @@ function filter() {
       }
     });
   }
+}
+
+function counter() {
+  let leftBlock;
+  let rightBlock;
+
+  leftBlock = JSON.parse(localStorage.getItem("leftBlock"));
+  rightBlock = JSON.parse(localStorage.getItem("rightBlock"));
+
+  let leftCounter = document.querySelector(".leftCounter");
+  let rightCounter = document.querySelector(".rightCounter");
+
+  leftCounter.innerText = `${leftBlock.length}`;
+  rightCounter.innerText = `${rightBlock.length}`;
 }
 
 function checkLocalStorage(data, callback) {
