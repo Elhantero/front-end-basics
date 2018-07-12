@@ -77,3 +77,21 @@ div {
 .hide {
   display: none;
 }
+
+.leftCounter {
+  background-color: green;
+  border: 2px solid green;
+  width: 450px;
+  color: white;
+  font-size: 36px;
+  float: left;
+}
+
+.rightCounter {
+  background-color: crimson;
+  border: 2px solid red;
+  width: 450px;
+  color: white;
+  font-size: 36px;
+  float: left;
+}

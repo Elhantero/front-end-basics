@@ -3,8 +3,8 @@ readData("GET", "static/data.json").then(
     const data = JSON.parse(e.target.response);
 
     checkLocalStorage(data, buildListOfbooks);
-    moveItem();
-    moveItem2();
+    moveItemToRight();
+    moveItemToLeft();
     filter();
     e.preventDefault();
   },
@@ -21,6 +21,41 @@ function readData(method, url) {
     xhr.onerror = reject;
     xhr.send();
   });
+}
+
+function counter() {
+  let leftBlock;
+  let rightBlock;
+
+  leftBlock = JSON.parse(localStorage.getItem("leftBlock"));
+  rightBlock = JSON.parse(localStorage.getItem("rightBlock"));
+
+  let leftCounter = document.querySelector(".leftCounter");
+  let rightCounter = document.querySelector(".rightCounter");
+
+  leftCounter.innerText = `${leftBlock.length}`;
+  rightCounter.innerText = `${rightBlock.length}`;
+
+  console.log(leftBlock.length);
+  console.log(rightBlock.length);
+}
+
+function filter() {
+  const filter = document.querySelector("input");
+  filter.addEventListener("keyup", filterBooks);
+
+  function filterBooks(e) {
+    const text = e.target.value.toLowerCase();
+
+    document.querySelectorAll(".item .title").forEach(function(bookItem) {
+      const item = bookItem.lastChild.innerText;
+      if (item.toLowerCase().indexOf(text) != -1) {
+        bookItem.parentElement.style.display = "flex";
+      } else {
+        bookItem.parentElement.style.display = "none";
+      }
+    });
+  }
 }
 
 function checkLocalStorage(data, callback) {
@@ -45,11 +80,11 @@ function checkLocalStorage(data, callback) {
   } else {
     rightBlock = JSON.parse(localStorage.getItem("rightBlock"));
   }
-
+  counter();
   callback(leftBlock, rightBlock);
 }
 
-function moveItem() {
+function moveItemToRight() {
   const buttons = document.querySelectorAll(".after");
   for (var i = 0; i < buttons.length; i++) {
     let button = buttons[i];
@@ -62,10 +97,9 @@ function moveItem() {
       const div = document.querySelector(".right");
       div.appendChild(el2);
       el.parentNode.removeChild(el);
-      moveItem2();
+      moveItemToLeft();
 
       const a = el.childNodes[1].childNodes[0].childNodes[1].data;
-      console.log(el.childNodes);
 
       let leftBlock;
       leftBlock = JSON.parse(localStorage.getItem("leftBlock"));
@@ -81,11 +115,12 @@ function moveItem() {
           localStorage.setItem("leftBlock", JSON.stringify(leftBlock));
         }
       }
+      counter();
     };
   }
 }
 
-function moveItem2() {
+function moveItemToLeft() {
   const buttons = document.querySelectorAll(".before");
   for (var i = 0; i < buttons.length; i++) {
     let button = buttons[i];
@@ -98,7 +133,7 @@ function moveItem2() {
       const div = document.querySelector(".left");
       div.appendChild(el2);
       el.parentNode.removeChild(el);
-      moveItem();
+      moveItemToRight();
 
       const a = el.childNodes[1].childNodes[0].childNodes[1].data;
 
@@ -116,25 +151,8 @@ function moveItem2() {
           localStorage.setItem("rightBlock", JSON.stringify(rightBlock));
         }
       }
+      counter();
     };
-  }
-}
-
-function filter() {
-  const filter = document.querySelector("input");
-  filter.addEventListener("keyup", filterBooks);
-
-  function filterBooks(e) {
-    const text = e.target.value.toLowerCase();
-
-    document.querySelectorAll(".item .title").forEach(function(bookItem) {
-      const item = bookItem.lastChild.innerText;
-      if (item.toLowerCase().indexOf(text) != -1) {
-        bookItem.parentElement.style.display = "flex";
-      } else {
-        bookItem.parentElement.style.display = "none";
-      }
-    });
   }
 }
 
