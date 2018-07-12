@@ -2,7 +2,7 @@ readData("GET", "static/data.json").then(
   function(e) {
     const data = JSON.parse(e.target.response);
 
-    checkLocalStorage(data, func);
+    checkLocalStorage(data, buildListOfbooks);
     moveItem();
     moveItem2();
     filter();
@@ -49,7 +49,96 @@ function checkLocalStorage(data, callback) {
   callback(leftBlock, rightBlock);
 }
 
-function func(left, right) {
+function moveItem() {
+  const buttons = document.querySelectorAll(".after");
+  for (var i = 0; i < buttons.length; i++) {
+    let button = buttons[i];
+
+    button.onclick = function() {
+      let el = this.parentNode;
+      let el2 = el.cloneNode(true);
+      el2.childNodes[2].className = "before";
+
+      const div = document.querySelector(".right");
+      div.appendChild(el2);
+      el.parentNode.removeChild(el);
+      moveItem2();
+
+      const a = el.childNodes[1].childNodes[0].childNodes[1].data;
+      console.log(el.childNodes);
+
+      let leftBlock;
+      leftBlock = JSON.parse(localStorage.getItem("leftBlock"));
+      let rightBlock;
+      rightBlock = JSON.parse(localStorage.getItem("rightBlock"));
+
+      for (var i = 0; i < leftBlock.length; i++) {
+        if (a === leftBlock[i].name) {
+          rightBlock.push(leftBlock[i]);
+          localStorage.setItem("rightBlock", JSON.stringify(rightBlock));
+
+          leftBlock.splice(i, 1);
+          localStorage.setItem("leftBlock", JSON.stringify(leftBlock));
+        }
+      }
+    };
+  }
+}
+
+function moveItem2() {
+  const buttons = document.querySelectorAll(".before");
+  for (var i = 0; i < buttons.length; i++) {
+    let button = buttons[i];
+
+    button.onclick = function() {
+      var el = this.parentNode;
+      var el2 = el.cloneNode(true);
+      el2.childNodes[2].className = "after";
+
+      const div = document.querySelector(".left");
+      div.appendChild(el2);
+      el.parentNode.removeChild(el);
+      moveItem();
+
+      const a = el.childNodes[1].childNodes[0].childNodes[1].data;
+
+      let leftBlock;
+      leftBlock = JSON.parse(localStorage.getItem("leftBlock"));
+      let rightBlock;
+      rightBlock = JSON.parse(localStorage.getItem("rightBlock"));
+
+      for (var i = 0; i < rightBlock.length; i++) {
+        if (a === rightBlock[i].name) {
+          leftBlock.push(rightBlock[i]);
+          localStorage.setItem("leftBlock", JSON.stringify(leftBlock));
+
+          rightBlock.splice(i, 1);
+          localStorage.setItem("rightBlock", JSON.stringify(rightBlock));
+        }
+      }
+    };
+  }
+}
+
+function filter() {
+  const filter = document.querySelector("input");
+  filter.addEventListener("keyup", filterBooks);
+
+  function filterBooks(e) {
+    const text = e.target.value.toLowerCase();
+
+    document.querySelectorAll(".item .title").forEach(function(bookItem) {
+      const item = bookItem.lastChild.innerText;
+      if (item.toLowerCase().indexOf(text) != -1) {
+        bookItem.parentElement.style.display = "flex";
+      } else {
+        bookItem.parentElement.style.display = "none";
+      }
+    });
+  }
+}
+
+function buildListOfbooks(left, right) {
   for (var i = 0; i < left.length; i++) {
     const mainDiv = document.querySelector(".left");
 
@@ -126,99 +215,11 @@ function func(left, right) {
     title.appendChild(author);
 
     const button = document.createElement("div");
-    button.className = "after";
+    button.className = "before";
 
     mainDiv.appendChild(itemDiv);
     itemDiv.appendChild(pic);
     itemDiv.appendChild(title);
     itemDiv.appendChild(button);
-  }
-}
-
-function moveItem() {
-  const buttons = document.querySelectorAll(".after");
-  for (var i = 0; i < buttons.length; i++) {
-    let button = buttons[i];
-
-    button.onclick = function() {
-      let el = this.parentNode;
-      let el2 = el.cloneNode(true);
-      el2.childNodes[2].className = "before";
-
-      const div = document.querySelector(".right");
-      div.appendChild(el2);
-      el.parentNode.removeChild(el);
-      moveItem2();
-
-      const a = el.childNodes[1].firstElementChild.innerHTML;
-
-      let leftBlock;
-      leftBlock = JSON.parse(localStorage.getItem("leftBlock"));
-      let rightBlock;
-      rightBlock = JSON.parse(localStorage.getItem("rightBlock"));
-
-      for (var i = 0; i < leftBlock.length; i++) {
-        if (a === leftBlock[i].name) {
-          rightBlock.push(leftBlock[i]);
-          localStorage.setItem("rightBlock", JSON.stringify(rightBlock));
-
-          leftBlock.splice(i, 1);
-          localStorage.setItem("leftBlock", JSON.stringify(leftBlock));
-        }
-      }
-    };
-  }
-}
-
-function moveItem2() {
-  const buttons = document.querySelectorAll(".before");
-  for (var i = 0; i < buttons.length; i++) {
-    let button = buttons[i];
-
-    button.onclick = function() {
-      var el = this.parentNode;
-      var el2 = el.cloneNode(true);
-      el2.childNodes[2].className = "after";
-
-      const div = document.querySelector(".left");
-      div.appendChild(el2);
-      el.parentNode.removeChild(el);
-      moveItem();
-
-      const a = el.childNodes[1].firstElementChild.innerHTML;
-
-      let leftBlock;
-      leftBlock = JSON.parse(localStorage.getItem("leftBlock"));
-      let rightBlock;
-      rightBlock = JSON.parse(localStorage.getItem("rightBlock"));
-
-      for (var i = 0; i < rightBlock.length; i++) {
-        if (a === rightBlock[i].name) {
-          leftBlock.push(rightBlock[i]);
-          localStorage.setItem("leftBlock", JSON.stringify(leftBlock));
-
-          rightBlock.splice(i, 1);
-          localStorage.setItem("rightBlock", JSON.stringify(rightBlock));
-        }
-      }
-    };
-  }
-}
-
-function filter() {
-  const filter = document.querySelector("input");
-  filter.addEventListener("keyup", filterTasks);
-
-  function filterTasks(e) {
-    const text = e.target.value.toLowerCase();
-
-    document.querySelectorAll(".item .title").forEach(function(task) {
-      const item = task.lastChild.innerText;
-      if (item.toLowerCase().indexOf(text) != -1) {
-        task.parentElement.style.display = "flex";
-      } else {
-        task.parentElement.style.display = "none";
-      }
-    });
   }
 }
