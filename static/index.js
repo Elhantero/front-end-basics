@@ -179,13 +179,12 @@ function buildListOfbooks(leftBlock, rightBlock) {
     const authorBold = document.createElement("b");
     authorBold.innerHTML = "Автор:&nbsp;";
 
-    const nameText = document.createTextNode(leftBlock[i].name);
-    const authorText = document.createTextNode(leftBlock[i].author);
-
     name.appendChild(nameBold);
+    const nameText = document.createTextNode(leftBlock[i].name);
     name.appendChild(nameText);
 
     author.appendChild(authorBold);
+    const authorText = document.createTextNode(leftBlock[i].author);
     author.appendChild(authorText);
 
     title.appendChild(name);
@@ -222,13 +221,12 @@ function buildListOfbooks(leftBlock, rightBlock) {
     const authorBold = document.createElement("b");
     authorBold.innerHTML = "Автор:&nbsp;";
 
-    const nameText = document.createTextNode(rightBlock[i].name);
-    const authorText = document.createTextNode(rightBlock[i].author);
-
-    name.appendChild(nameText);
     name.appendChild(nameBold);
+    const nameText = document.createTextNode(rightBlock[i].name);
+    name.appendChild(nameText);
 
     author.appendChild(authorBold);
+    const authorText = document.createTextNode(rightBlock[i].author);
     author.appendChild(authorText);
 
     title.appendChild(name);
