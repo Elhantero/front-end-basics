@@ -87,6 +87,7 @@ function checkLocalStorage(data, callback) {
 // Move item from left block to right
 function moveItemToRight() {
   const buttons = document.querySelectorAll(".after");
+
   for (var i = 0; i < buttons.length; i++) {
     let button = buttons[i];
 
@@ -100,15 +101,13 @@ function moveItemToRight() {
       el.parentNode.removeChild(el);
       moveItemToLeft();
 
-      const a = el.childNodes[1].childNodes[0].childNodes[1].data;
+      const authorCheckName = el.childNodes[1].childNodes[0].childNodes[1].data;
 
-      let leftBlock;
-      leftBlock = JSON.parse(localStorage.getItem("leftBlock"));
-      let rightBlock;
-      rightBlock = JSON.parse(localStorage.getItem("rightBlock"));
+      let leftBlock = JSON.parse(localStorage.getItem("leftBlock"));
+      let rightBlock = JSON.parse(localStorage.getItem("rightBlock"));
 
       for (var i = 0; i < leftBlock.length; i++) {
-        if (a === leftBlock[i].name) {
+        if (authorCheckName === leftBlock[i].name) {
           rightBlock.push(leftBlock[i]);
           localStorage.setItem("rightBlock", JSON.stringify(rightBlock));
 
@@ -137,15 +136,13 @@ function moveItemToLeft() {
       el.parentNode.removeChild(el);
       moveItemToRight();
 
-      const a = el.childNodes[1].childNodes[0].childNodes[1].data;
+      const authorCheckName = el.childNodes[1].childNodes[0].childNodes[1].data;
 
-      let leftBlock;
-      leftBlock = JSON.parse(localStorage.getItem("leftBlock"));
-      let rightBlock;
-      rightBlock = JSON.parse(localStorage.getItem("rightBlock"));
+      let leftBlock = JSON.parse(localStorage.getItem("leftBlock"));
+      let rightBlock = JSON.parse(localStorage.getItem("rightBlock"));
 
       for (var i = 0; i < rightBlock.length; i++) {
-        if (a === rightBlock[i].name) {
+        if (authorCheckName === rightBlock[i].name) {
           leftBlock.push(rightBlock[i]);
           localStorage.setItem("leftBlock", JSON.stringify(leftBlock));
 
@@ -182,12 +179,13 @@ function buildListOfbooks(leftBlock, rightBlock) {
     const authorBold = document.createElement("b");
     authorBold.innerHTML = "Автор:&nbsp;";
 
-    name.appendChild(nameBold);
     const nameText = document.createTextNode(leftBlock[i].name);
+    const authorText = document.createTextNode(leftBlock[i].author);
+
+    name.appendChild(nameBold);
     name.appendChild(nameText);
 
     author.appendChild(authorBold);
-    const authorText = document.createTextNode(leftBlock[i].author);
     author.appendChild(authorText);
 
     title.appendChild(name);
@@ -224,12 +222,13 @@ function buildListOfbooks(leftBlock, rightBlock) {
     const authorBold = document.createElement("b");
     authorBold.innerHTML = "Автор:&nbsp;";
 
-    name.appendChild(nameBold);
     const nameText = document.createTextNode(rightBlock[i].name);
+    const authorText = document.createTextNode(rightBlock[i].author);
+
     name.appendChild(nameText);
+    name.appendChild(nameBold);
 
     author.appendChild(authorBold);
-    const authorText = document.createTextNode(rightBlock[i].author);
     author.appendChild(authorText);
 
     title.appendChild(name);
