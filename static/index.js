@@ -35,10 +35,8 @@ function filter() {
       const item = bookItem.lastChild.innerText;
 
       if (item.toLowerCase().indexOf(text) != -1) {
-        counter();
         bookItem.parentElement.style.display = "flex";
       } else {
-        counter();
         bookItem.parentElement.style.display = "none";
       }
     });
@@ -154,8 +152,8 @@ function moveItemToLeft() {
   }
 }
 
-function buildListOfbooks(left, right) {
-  for (var i = 0; i < left.length; i++) {
+function buildListOfbooks(leftBlock, rightBlock) {
+  for (var i = 0; i < leftBlock.length; i++) {
     const mainDiv = document.querySelector(".left");
 
     const itemDiv = document.createElement("div");
@@ -163,7 +161,7 @@ function buildListOfbooks(left, right) {
 
     const pic = document.createElement("div");
     pic.className = "pic";
-    pic.innerHTML = `<img src=${left[i].img}>`;
+    pic.innerHTML = `<img src=${leftBlock[i].img}>`;
 
     const title = document.createElement("div");
     title.className = "title";
@@ -172,17 +170,17 @@ function buildListOfbooks(left, right) {
     const author = document.createElement("span");
 
     const nameBold = document.createElement("b");
-    nameBold.innerHTML = "Название: ";
+    nameBold.innerHTML = "Название:&nbsp;";
 
     const authorBold = document.createElement("b");
-    authorBold.innerHTML = "Автор: ";
+    authorBold.innerHTML = "Автор:&nbsp;";
 
     name.appendChild(nameBold);
-    const nameText = document.createTextNode(left[i].name);
+    const nameText = document.createTextNode(leftBlock[i].name);
     name.appendChild(nameText);
 
     author.appendChild(authorBold);
-    const authorText = document.createTextNode(left[i].author);
+    const authorText = document.createTextNode(leftBlock[i].author);
     author.appendChild(authorText);
 
     title.appendChild(name);
@@ -197,7 +195,7 @@ function buildListOfbooks(left, right) {
     itemDiv.appendChild(button);
   }
 
-  for (var i = 0; i < right.length; i++) {
+  for (var i = 0; i < rightBlock.length; i++) {
     const mainDiv = document.querySelector(".right");
 
     const itemDiv = document.createElement("div");
@@ -205,7 +203,7 @@ function buildListOfbooks(left, right) {
 
     const pic = document.createElement("div");
     pic.className = "pic";
-    pic.innerHTML = `<img src=${right[i].img}>`;
+    pic.innerHTML = `<img src=${rightBlock[i].img}>`;
 
     const title = document.createElement("div");
     title.className = "title";
@@ -214,17 +212,17 @@ function buildListOfbooks(left, right) {
     const author = document.createElement("span");
 
     const nameBold = document.createElement("b");
-    nameBold.innerHTML = "Название: ";
+    nameBold.innerHTML = "Название:&nbsp;";
 
     const authorBold = document.createElement("b");
-    authorBold.innerHTML = "Автор: ";
+    authorBold.innerHTML = "Автор:&nbsp;";
 
     name.appendChild(nameBold);
-    const nameText = document.createTextNode(right[i].name);
+    const nameText = document.createTextNode(rightBlock[i].name);
     name.appendChild(nameText);
 
     author.appendChild(authorBold);
-    const authorText = document.createTextNode(right[i].author);
+    const authorText = document.createTextNode(rightBlock[i].author);
     author.appendChild(authorText);
 
     title.appendChild(name);
