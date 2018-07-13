@@ -14,6 +14,7 @@ readData("GET", "static/data.json").then(
   }
 );
 
+// Request for getting data
 function readData(method, url) {
   return new Promise(function(resolve, reject) {
     var xhr = new XMLHttpRequest();
@@ -24,6 +25,7 @@ function readData(method, url) {
   });
 }
 
+// Filter by name of author
 function filter() {
   const filter = document.querySelector("input");
   filter.addEventListener("keyup", filterBooks);
@@ -43,6 +45,7 @@ function filter() {
   }
 }
 
+// Counter for left and right blocks
 function counter() {
   let leftCounter = document.querySelector(".leftCounter");
   let rightCounter = document.querySelector(".rightCounter");
@@ -54,6 +57,7 @@ function counter() {
   rightCounter.innerText = `${rightBlock.childNodes.length}`;
 }
 
+// Check local storage
 function checkLocalStorage(data, callback) {
   let leftBlock;
   let rightBlock;
@@ -80,6 +84,7 @@ function checkLocalStorage(data, callback) {
   callback(leftBlock, rightBlock);
 }
 
+// Move item from left block to right
 function moveItemToRight() {
   const buttons = document.querySelectorAll(".after");
   for (var i = 0; i < buttons.length; i++) {
@@ -116,6 +121,7 @@ function moveItemToRight() {
   }
 }
 
+// Move item from right block to left
 function moveItemToLeft() {
   const buttons = document.querySelectorAll(".before");
   for (var i = 0; i < buttons.length; i++) {
@@ -152,6 +158,7 @@ function moveItemToLeft() {
   }
 }
 
+// Build list of books in left and right blocks
 function buildListOfbooks(leftBlock, rightBlock) {
   for (var i = 0; i < leftBlock.length; i++) {
     const mainDiv = document.querySelector(".left");
