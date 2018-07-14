@@ -94,7 +94,7 @@ function checkLocalStorage(data, callback) {
 }
 
 // Function move item from one block to another
-function move(blockClassStr, cbCounter) {
+function move(blockClassStr) {
   let buttons;
 
   if (blockClassStr === ".before") {
