@@ -128,6 +128,7 @@ function move(blockClassStr) {
       let rightBlock = JSON.parse(localStorage.getItem("rightBlock"));
 
       if (blockClassStr === ".before") {
+        move(".after");
         for (var i = 0; i < rightBlock.length; i++) {
           if (authorCheckName === rightBlock[i].name) {
             leftBlock.push(rightBlock[i]);
@@ -138,6 +139,7 @@ function move(blockClassStr) {
           }
         }
       } else if (blockClassStr === ".after") {
+        move(".before");
         for (var i = 0; i < leftBlock.length; i++) {
           if (authorCheckName === leftBlock[i].name) {
             rightBlock.push(leftBlock[i]);
