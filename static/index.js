@@ -1,12 +1,21 @@
+/**
+ * How to launch and test
+ * use FIREFOX or
+ * add --allow-file-access-from-files into CHROME settings
+ *
+ */
+
 readData("GET", "static/data.json").then(
   function(e) {
     const data = JSON.parse(e.target.response);
+    const classNameLeftButton = ".after";
+    const classNameRightButton = ".before";
 
     checkLocalStorage(data, buildListOfbooks);
     counter();
-    moveItemToRight();
-    moveItemToLeft();
-    filter();
+    move(classNameRightButton);
+    move(classNameLeftButton);
+    filterByAuthor();
     e.preventDefault();
   },
   function(err) {
@@ -26,7 +35,7 @@ function readData(method, url) {
 }
 
 // Filter by name of author
-function filter() {
+function filterByAuthor() {
   const filter = document.querySelector("input");
   filter.addEventListener("keyup", filterBooks);
 
@@ -47,11 +56,11 @@ function filter() {
 
 // Counter for left and right blocks
 function counter() {
-  let leftCounter = document.querySelector(".leftCounter");
-  let rightCounter = document.querySelector(".rightCounter");
+  const leftCounter = document.querySelector(".leftCounter");
+  const rightCounter = document.querySelector(".rightCounter");
 
-  let leftBlock = document.querySelector(".left");
-  let rightBlock = document.querySelector(".right");
+  const leftBlock = document.querySelector(".left");
+  const rightBlock = document.querySelector(".right");
 
   leftCounter.innerText = `${leftBlock.childNodes.length}`;
   rightCounter.innerText = `${rightBlock.childNodes.length}`;
@@ -59,8 +68,8 @@ function counter() {
 
 // Check local storage
 function checkLocalStorage(data, callback) {
-  let leftBlock;
-  let rightBlock;
+  var leftBlock;
+  var rightBlock;
 
   document.querySelector("input").value = "";
 
@@ -84,72 +93,62 @@ function checkLocalStorage(data, callback) {
   callback(leftBlock, rightBlock);
 }
 
-// Move item from left block to right
-function moveItemToRight() {
-  const buttons = document.querySelectorAll(".after");
+// Function move item from one block to another
+function move(blockClassStr, cbCounter) {
+  let buttons;
 
-  for (var i = 0; i < buttons.length; i++) {
-    let button = buttons[i];
-
-    button.onclick = function() {
-      let el = this.parentNode;
-      let el2 = el.cloneNode(true);
-      el2.childNodes[2].className = "before";
-
-      const div = document.querySelector(".right");
-      div.appendChild(el2);
-      el.parentNode.removeChild(el);
-      moveItemToLeft();
-
-      const authorCheckName = el.childNodes[1].childNodes[0].childNodes[1].data;
-
-      let leftBlock = JSON.parse(localStorage.getItem("leftBlock"));
-      let rightBlock = JSON.parse(localStorage.getItem("rightBlock"));
-
-      for (var i = 0; i < leftBlock.length; i++) {
-        if (authorCheckName === leftBlock[i].name) {
-          rightBlock.push(leftBlock[i]);
-          localStorage.setItem("rightBlock", JSON.stringify(rightBlock));
-
-          leftBlock.splice(i, 1);
-          localStorage.setItem("leftBlock", JSON.stringify(leftBlock));
-        }
-      }
-      counter();
-    };
+  if (blockClassStr === ".before") {
+    buttons = document.querySelectorAll(".before");
+  } else if (blockClassStr === ".after") {
+    buttons = document.querySelectorAll(".after");
   }
-}
 
-// Move item from right block to left
-function moveItemToLeft() {
-  const buttons = document.querySelectorAll(".before");
   for (var i = 0; i < buttons.length; i++) {
     let button = buttons[i];
 
     button.onclick = function() {
       var el = this.parentNode;
       var el2 = el.cloneNode(true);
-      el2.childNodes[2].className = "after";
+      let div;
 
-      const div = document.querySelector(".left");
+      if (blockClassStr === ".before") {
+        el2.childNodes[2].className = "after";
+        div = document.querySelector(".left");
+      } else if (blockClassStr === ".after") {
+        el2.childNodes[2].className = "before";
+        div = document.querySelector(".right");
+      }
+
       div.appendChild(el2);
       el.parentNode.removeChild(el);
-      moveItemToRight();
 
       const authorCheckName = el.childNodes[1].childNodes[0].childNodes[1].data;
 
       let leftBlock = JSON.parse(localStorage.getItem("leftBlock"));
       let rightBlock = JSON.parse(localStorage.getItem("rightBlock"));
 
-      for (var i = 0; i < rightBlock.length; i++) {
-        if (authorCheckName === rightBlock[i].name) {
-          leftBlock.push(rightBlock[i]);
-          localStorage.setItem("leftBlock", JSON.stringify(leftBlock));
+      if (blockClassStr === ".before") {
+        for (var i = 0; i < rightBlock.length; i++) {
+          if (authorCheckName === rightBlock[i].name) {
+            leftBlock.push(rightBlock[i]);
+            localStorage.setItem("leftBlock", JSON.stringify(leftBlock));
 
-          rightBlock.splice(i, 1);
-          localStorage.setItem("rightBlock", JSON.stringify(rightBlock));
+            rightBlock.splice(i, 1);
+            localStorage.setItem("rightBlock", JSON.stringify(rightBlock));
+          }
+        }
+      } else if (blockClassStr === ".after") {
+        for (var i = 0; i < leftBlock.length; i++) {
+          if (authorCheckName === leftBlock[i].name) {
+            rightBlock.push(leftBlock[i]);
+            localStorage.setItem("rightBlock", JSON.stringify(rightBlock));
+
+            leftBlock.splice(i, 1);
+            localStorage.setItem("leftBlock", JSON.stringify(leftBlock));
+          }
         }
       }
+
       counter();
     };
   }
@@ -158,86 +157,61 @@ function moveItemToLeft() {
 // Build list of books in left and right blocks
 function buildListOfbooks(leftBlock, rightBlock) {
   for (var i = 0; i < leftBlock.length; i++) {
-    const mainDiv = document.querySelector(".left");
-
-    const itemDiv = document.createElement("div");
-    itemDiv.className = "item";
-
-    const pic = document.createElement("div");
-    pic.className = "pic";
-    pic.innerHTML = `<img src=${leftBlock[i].img}>`;
-
-    const title = document.createElement("div");
-    title.className = "title";
-
-    const name = document.createElement("span");
-    const author = document.createElement("span");
-
-    const nameBold = document.createElement("b");
-    nameBold.innerHTML = "Название:&nbsp;";
-
-    const authorBold = document.createElement("b");
-    authorBold.innerHTML = "Автор:&nbsp;";
-
-    name.appendChild(nameBold);
-    const nameText = document.createTextNode(leftBlock[i].name);
-    name.appendChild(nameText);
-
-    author.appendChild(authorBold);
-    const authorText = document.createTextNode(leftBlock[i].author);
-    author.appendChild(authorText);
-
-    title.appendChild(name);
-    title.appendChild(author);
-
-    const button = document.createElement("div");
-    button.className = "after";
-
-    mainDiv.appendChild(itemDiv);
-    itemDiv.appendChild(pic);
-    itemDiv.appendChild(title);
-    itemDiv.appendChild(button);
+    builder(leftBlock[i], ".left");
   }
 
   for (var i = 0; i < rightBlock.length; i++) {
-    const mainDiv = document.querySelector(".right");
-
-    const itemDiv = document.createElement("div");
-    itemDiv.className = "item";
-
-    const pic = document.createElement("div");
-    pic.className = "pic";
-    pic.innerHTML = `<img src=${rightBlock[i].img}>`;
-
-    const title = document.createElement("div");
-    title.className = "title";
-
-    const name = document.createElement("span");
-    const author = document.createElement("span");
-
-    const nameBold = document.createElement("b");
-    nameBold.innerHTML = "Название:&nbsp;";
-
-    const authorBold = document.createElement("b");
-    authorBold.innerHTML = "Автор:&nbsp;";
-
-    name.appendChild(nameBold);
-    const nameText = document.createTextNode(rightBlock[i].name);
-    name.appendChild(nameText);
-
-    author.appendChild(authorBold);
-    const authorText = document.createTextNode(rightBlock[i].author);
-    author.appendChild(authorText);
-
-    title.appendChild(name);
-    title.appendChild(author);
-
-    const button = document.createElement("div");
-    button.className = "before";
-
-    mainDiv.appendChild(itemDiv);
-    itemDiv.appendChild(pic);
-    itemDiv.appendChild(title);
-    itemDiv.appendChild(button);
+    builder(rightBlock[i], ".right");
   }
+}
+
+// Building of item
+function builder(block, blockClassStr) {
+  let mainDiv;
+  let button;
+
+  if (blockClassStr === ".left") {
+    mainDiv = document.querySelector(".left");
+    button = document.createElement("div");
+    button.className = "after";
+  } else if (blockClassStr === ".right") {
+    mainDiv = document.querySelector(".right");
+    button = document.createElement("div");
+    button.className = "before";
+  }
+
+  const itemDiv = document.createElement("div");
+  itemDiv.className = "item";
+
+  const pic = document.createElement("div");
+  pic.className = "pic";
+  pic.innerHTML = `<img src=${block.img}>`;
+
+  const title = document.createElement("div");
+  title.className = "title";
+
+  const name = document.createElement("span");
+  const author = document.createElement("span");
+
+  const nameBold = document.createElement("b");
+  nameBold.innerHTML = "Название:&nbsp;";
+
+  const authorBold = document.createElement("b");
+  authorBold.innerHTML = "Автор:&nbsp;";
+
+  name.appendChild(nameBold);
+  const nameText = document.createTextNode(block.name);
+  name.appendChild(nameText);
+
+  author.appendChild(authorBold);
+  const authorText = document.createTextNode(block.author);
+  author.appendChild(authorText);
+
+  title.appendChild(name);
+  title.appendChild(author);
+
+  mainDiv.appendChild(itemDiv);
+  itemDiv.appendChild(pic);
+  itemDiv.appendChild(title);
+  itemDiv.appendChild(button);
 }
